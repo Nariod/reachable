@@ -1,6 +1,14 @@
 # Reachable
 Simple tool to answer the question "What can I access from this machine?".
 
+## Supported protocols
+- HTTP on port 80
+- HTTPS on port 443
+
+## Todo
+- [ ] DNS
+- [ ] Wireguard
+
 ## Credits
 - Rust discord
 - StackOverflow
