@@ -10,15 +10,13 @@ pub struct Inputs {
     pub ip: IpAddr,
 }
 
-#[derive(Clone)]
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Target {
     Ipv4Addr(Ipv4Addr),
     Domain(String),
 }
 
-#[derive(PartialEq)]
-#[derive(Debug)]
+#[derive(PartialEq, Debug)]
 pub enum Mode {
     Client,
     Server,
@@ -28,7 +26,7 @@ fn getting_arguments() -> Vec<String> {
     let inputs: Vec<String> = env::args().collect();
     if inputs.len() != 3 {
         panic!("This program requires two arguments. Eg: `./reachable client my.domain.com`");
-    } 
+    }
     let mode = &inputs[1];
     let ip = &inputs[2];
     let result = vec![mode.clone(), ip.clone()];

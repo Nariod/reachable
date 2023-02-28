@@ -1,8 +1,8 @@
 use crate::arg_parser::{meta_arg_parser, Mode};
 
 mod arg_parser;
-mod server;
 mod client;
+mod server;
 
 fn main() {
     //println!("Hello from main!");
