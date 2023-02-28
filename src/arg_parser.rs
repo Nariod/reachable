@@ -1,7 +1,8 @@
-// Module dedicated to parsing arguments
+// Module dedicated to parsing and checking arguments
 
+use addr::parse_domain_name;
 use std::env;
-use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+use std::net::{IpAddr, Ipv4Addr};
 
 #[derive(Debug)]
 pub struct Inputs {
@@ -10,9 +11,15 @@ pub struct Inputs {
 }
 
 #[derive(Debug)]
+pub enum Target {
+    Ipv4Addr(String),
+    Domain(String),
+}
+
+#[derive(Debug)]
 pub enum Mode {
     Client,
-    Server
+    Server,
 }
 
 fn getting_arguments() -> Vec<String> {
@@ -23,11 +30,11 @@ fn getting_arguments() -> Vec<String> {
     result
 }
 
-fn is_mode_ok(input: &String) -> Mode {
+fn is_mode_ok(input: &str) -> Mode {
     let result;
-    if input.clone() == String::from("client") {
+    if *input == *"client" {
         result = Mode::Client;
-    } else if input.clone() == String::from("server") {
+    } else if *input == *"server" {
         result = Mode::Server;
     } else {
         panic!("Please select either client or server mode");
@@ -35,9 +42,29 @@ fn is_mode_ok(input: &String) -> Mode {
     result
 }
 
+fn is_target_ok(input: &str) -> Target {
+    let result;
+    if is_ip_ok(input) {
+        result = Target::Ipv4Addr(String::from(input));
+    } else if is_domain_ok(input) {
+        result = Target::Domain(String::from(input));
+    } else {
+        panic!("Please enter either a valid IPv4 or domain");
+    }
+    result
+}
 
-pub fn meta_arg_parser() {
+fn is_ip_ok(input: &str) -> bool {
+    input.parse::<Ipv4Addr>().is_ok()
+}
+
+fn is_domain_ok(input: &str) -> bool {
+    parse_domain_name(input).is_ok()
+}
+
+pub fn meta_arg_parser() -> (Mode, Target) {
     let args = getting_arguments();
     let mode = is_mode_ok(&args[0]);
-    println!("Selected mode: {:?}", mode);
+    let target = is_target_ok(&args[1]);
+    (mode, target)
 }

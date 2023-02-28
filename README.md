@@ -1,5 +1,5 @@
 # Reachable
-Simple tool to answer the question "Is it reachable from this machine?"
+Simple tool to answer the question "What can I access from this machine?".
 
 ## Credits
 - Rust discord
