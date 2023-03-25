@@ -1,3 +1,4 @@
+
 use crate::arg_parser::Target;
 
 async fn http_request(target: Target, target_port: u16) -> Result<(), Box<dyn std::error::Error>> {
@@ -23,9 +24,15 @@ async fn https_request(target: Target, target_port: u16) -> Result<(), Box<dyn s
         Target::Ipv4Addr(content) => content.to_string(),
     };
     let url = format!("https://{domain}:{target_port}/hello/reachable");
+    println!("[+] Performing HTTPS request on {}", &url);
 
-    //todo: allow self signed certificate
-    let resp = reqwest::get(url).await?.status();
+    let resp = reqwest::Client::builder()
+        .danger_accept_invalid_certs(true)
+        .build()?
+        .get(&url)
+        .send()
+        .await?
+        .status();
 
     println!("HTTPS response status: {:#?}", resp);
 

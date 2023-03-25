@@ -1,4 +1,3 @@
-use core::panic;
 use rcgen::generate_simple_self_signed;
 use std::net::Ipv4Addr;
 
@@ -44,9 +43,7 @@ async fn https_server(
 pub async fn meta_server(target: Target) -> Result<(), Box<dyn std::error::Error>> {
     let target_ip: Ipv4Addr = match target {
         Target::Ipv4Addr(content) => content,
-        Target::Domain(_content) => {
-            panic!("Can't use a domain for server mode, use a valid IPv4 instead")
-        }
+        Target::Domain(_content) => Ipv4Addr::new(0, 0, 0, 0)
     };
     let mut handles = vec![];
 
