@@ -8,6 +8,8 @@ Simple tool to answer the question "What can I access from this machine?".
 ## Todo
 - [ ] DNS
 - [ ] Wireguard
+- [ ] Recursive DNS
+- [ ] mTLS
 
 ## Credits
 - Rust discord
