@@ -6,6 +6,8 @@ Simple tool to answer the question "What outgoing protocols can I use to reach m
 - HTTPS on port 443
 
 ## Todo
+- [X] Add challenge response checks
+
 Add the following protocols:
 - [ ] DNS
 - [ ] Wireguard
@@ -30,6 +32,7 @@ On your public server, start the binary in server mode with elevated rights:
 On the machine you want to test the egress rules, start the binary in client mode. Here on Windows:
 - `./reachable.exe client [MY.DOMAIN.COM]`
 
+"Challenge successful over [PROTOCOL] !", means you can use the protocol to communicate to your server :)
 
 ## Credits
 - Rust discord
