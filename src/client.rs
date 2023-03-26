@@ -48,7 +48,7 @@ async fn http_request(
         Target::Ipv4Addr(content) => content.to_string(),
     };
 
-    let url = format!("http://{domain}:{target_port}/hello/reachable");
+    let url = format!("http://{domain}:{target_port}/reachable");
     println!("Trying HTTP request to {}", &url);
 
     let client = reqwest::Client::new();
@@ -85,7 +85,7 @@ async fn https_request(
         Target::Domain(content) => content,
         Target::Ipv4Addr(content) => content.to_string(),
     };
-    let url = format!("https://{domain}:{target_port}/hello/reachable");
+    let url = format!("https://{domain}:{target_port}/reachable");
     println!("Trying HTTPS request to {}", &url);
 
     let resp = reqwest::Client::builder()

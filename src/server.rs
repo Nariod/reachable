@@ -29,7 +29,6 @@ async fn http_server(
         target_ip, target_port
     );
     let is_reachable = warp::post()
-        .and(warp::path("hello"))
         .and(warp::path("reachable"))
         .and(warp::path::end())
         .and(warp::body::bytes())
@@ -61,7 +60,6 @@ async fn https_server(
 
     //let hello = warp::path!("hello" / String);
     let is_reachable = warp::post()
-        .and(warp::path("hello"))
         .and(warp::path("reachable"))
         .and(warp::path::end())
         .and(warp::body::bytes())
