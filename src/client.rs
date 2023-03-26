@@ -1,4 +1,3 @@
-use hex;
 use random_string::generate;
 use sha2::{Digest, Sha256};
 
@@ -15,11 +14,7 @@ fn check_challenge(challenge: &str, response: &str) -> bool {
     let result = hasher.finalize();
     let res_hex = hex::encode(result);
 
-    if response == &res_hex {
-        true
-    } else {
-        false
-    }
+    response == res_hex
 }
 
 async fn http_request(
