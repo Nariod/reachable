@@ -30,7 +30,6 @@ async fn http_request(
     };
 
     let url = format!("http://{domain}:{target_port}/hello/reachable");
-
     println!("Trying HTTP request to {}", &url);
 
     let client = reqwest::Client::new();
@@ -89,7 +88,7 @@ async fn https_request(
         let message = "[-] Challenge failed over HTTPS".red();
         println!("{}", &message);
     }
-    
+
     Ok(())
 }
 
