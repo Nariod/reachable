@@ -1,5 +1,6 @@
 use random_string::generate;
 use sha2::{Digest, Sha256};
+use colored::Colorize;
 
 use crate::arg_parser::Target;
 
@@ -46,9 +47,11 @@ async fn http_request(
     let is_chall_ok = check_challenge(&chall1, &resp);
 
     if is_chall_ok {
-        println!("[+] Challenge successful over HTTP !")
+        let message = "[+] Challenge successful over HTTP !".green();
+        println!("{}", &message);
     } else {
-        println!("[-] Challenge failed over HTTP")
+        let message = "[-] Challenge failed over HTTP".red();
+        println!("{}", &message);
     }
 
     Ok(())
@@ -80,10 +83,13 @@ async fn https_request(
     let is_chall_ok = check_challenge(&chall1, &resp);
 
     if is_chall_ok {
-        println!("[+] Challenge successful over HTTPS !")
+        let message = "[+] Challenge successful over HTTPS !".green();
+        println!("{}", &message);
     } else {
-        println!("[-] Challenge failed over HTTPS")
+        let message = "[-] Challenge failed over HTTPS".red();
+        println!("{}", &message);
     }
+    
     Ok(())
 }
 
