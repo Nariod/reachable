@@ -1,6 +1,7 @@
+use colored::Colorize;
 use random_string::generate;
 use sha2::{Digest, Sha256};
-use colored::Colorize;
+use trust_dns_resolver::TokioAsyncResolver;
 
 use crate::arg_parser::Target;
 
@@ -16,6 +17,24 @@ fn check_challenge(challenge: &str, response: &str) -> bool {
     let res_hex = hex::encode(result);
 
     response == res_hex
+}
+
+async fn dns_resolv(target: Target) -> Result<(), Box<dyn std::error::Error>> {
+    let domain = match target {
+        Target::Domain(content) => content,
+        Target::Ipv4Addr(content) => content.to_string(),
+    };
+    let resolver = TokioAsyncResolver::tokio_from_system_conf()?;
+
+    let response = resolver.ipv4_lookup(&domain).await?;
+    let address = response.iter().next();
+
+    match address {
+        Some(x) => println!("Domain resolved to IP {}", x),
+        None => println!("Error while resolving {}", &domain),
+    }
+
+    Ok(())
 }
 
 async fn http_request(
@@ -98,6 +117,14 @@ pub async fn meta_client(target: Target) -> Result<(), Box<dyn std::error::Error
     let chall1 = challenge.clone();
 
     let mut handles = vec![];
+
+    let handle = tokio::spawn({
+        let target_ip = target.clone();
+        async move {
+            let _ = dns_resolv(target_ip).await;
+        }
+    });
+    handles.push(handle);
 
     let handle = tokio::spawn({
         let target_ip = target.clone();

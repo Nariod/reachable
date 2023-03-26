@@ -1,9 +1,8 @@
 use rcgen::generate_simple_self_signed;
 use sha2::{Digest, Sha256};
+use std::convert::Infallible;
 use std::net::Ipv4Addr;
 use warp::Filter;
-
-use std::convert::Infallible;
 use warp::{http::StatusCode, Reply};
 
 use crate::arg_parser::Target;
