@@ -89,7 +89,6 @@ pub async fn meta_server(target: Target) -> Result<(), Box<dyn std::error::Error
     let mut handles = vec![];
 
     let handle = tokio::spawn({
-        let target_ip = target_ip;
         let target_port = 80;
         async move {
             let _ = http_server(target_ip, target_port).await;
@@ -98,7 +97,6 @@ pub async fn meta_server(target: Target) -> Result<(), Box<dyn std::error::Error
     handles.push(handle);
 
     let handle = tokio::spawn({
-        let target_ip = target_ip;
         let target_port = 443;
         async move {
             let _ = https_server(target_ip, target_port).await;
