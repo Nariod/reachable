@@ -1,5 +1,7 @@
 use colored::Colorize;
 use random_string::generate;
+use reqwest::ClientBuilder;
+use reqwest::Url;
 use sha2::{Digest, Sha256};
 use trust_dns_resolver::TokioAsyncResolver;
 
@@ -48,10 +50,16 @@ async fn http_request(
         Target::Ipv4Addr(content) => content.to_string(),
     };
 
-    let url = format!("http://{domain}:{target_port}/reachable");
+    let url_str = format!("http://{domain}:{target_port}/reachable");
+    let url = Url::parse(&url_str)?;
+    let proxy = reqwest::Proxy::http(url.clone())?;
+
+    // Create a reqwest ClientBuilder with the proxy configuration
+    let client = ClientBuilder::new().proxy(proxy).build()?;
+
     println!("Trying HTTP request to {}", &url);
 
-    let client = reqwest::Client::new();
+    // let client = reqwest::Client::new();
     let resp = client
         .post(url)
         .body(challenge)
@@ -85,13 +93,21 @@ async fn https_request(
         Target::Domain(content) => content,
         Target::Ipv4Addr(content) => content.to_string(),
     };
-    let url = format!("https://{domain}:{target_port}/reachable");
+    let url_str = format!("https://{domain}:{target_port}/reachable");
+
+    let url = Url::parse(&url_str)?;
+    let proxy = reqwest::Proxy::https(url.clone())?;
+
+    // Create a reqwest ClientBuilder with the proxy configuration
+    let client = ClientBuilder::new()
+        .proxy(proxy)
+        .danger_accept_invalid_certs(true)
+        .build()?;
+
     println!("Trying HTTPS request to {}", &url);
 
-    let resp = reqwest::Client::builder()
-        .danger_accept_invalid_certs(true)
-        .build()?
-        .post(&url)
+    let resp = client
+        .post(url)
         .body(challenge)
         .send()
         .await?
