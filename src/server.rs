@@ -1,6 +1,7 @@
 use rcgen::generate_simple_self_signed;
 use sha2::{Digest, Sha256};
 use std::convert::Infallible;
+use std::fmt::Write;
 use std::net::Ipv4Addr;
 use warp::Filter;
 use warp::{http::StatusCode, Reply};
@@ -12,10 +13,11 @@ async fn hash_body(body: bytes::Bytes) -> Result<impl Reply, Infallible> {
     hasher.update(&body);
     let result = hasher.finalize();
 
-    let hex_string = result
-        .iter()
-        .map(|byte| format!("{:02x}", byte))
-        .collect::<String>();
+    let hex_string: String = Default::default();
+    result.iter().fold(String::new(), |mut hex_string, b| {
+        let _ = write!(hex_string, "{b:02X}");
+        hex_string
+    });
 
     Ok(hex_string)
 }
