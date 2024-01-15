@@ -146,7 +146,14 @@ pub async fn meta_client(target: Target) -> Result<(), Box<dyn std::error::Error
         let target_ip = target.clone();
         let target_port = 80;
         async move {
-            let _ = http_request(target_ip, target_port, challenge.clone()).await;
+            let http_res = http_request(target_ip, target_port, challenge.clone()).await;
+            match http_res {
+                Ok(()) => (),
+                Err(_) => {
+                    let message = "[-] Challenge failed over HTTP".red();
+                    println!("{}", &message);
+                }
+            }
         }
     });
     handles.push(handle);
@@ -155,7 +162,14 @@ pub async fn meta_client(target: Target) -> Result<(), Box<dyn std::error::Error
         let target_ip = target.clone();
         let target_port = 443;
         async move {
-            let _ = https_request(target_ip, target_port, chall1.clone()).await;
+            let https_res = https_request(target_ip, target_port, chall1.clone()).await;
+            match https_res {
+                Ok(()) => (),
+                Err(_) => {
+                    let message = "[-] Challenge failed over HTTPS".red();
+                    println!("{}", &message);
+                }
+            }
         }
     });
     handles.push(handle);
